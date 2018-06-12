@@ -1,5 +1,21 @@
 import deepFreeze from 'deep-freeze'
 
+const todoApp = (state = {}, action) => {
+  return {
+    todos: todos(state.todos, action),
+    visibilityFilter: visibilityFilter(state.visibilityFilter, action),
+  }
+}
+
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.visibilityFilter
+    default:
+      state
+  }
+}
+
 const todo = (state, action) => {
   switch (action.type) {
     case 'ADD_TODO':
@@ -75,4 +91,12 @@ test('toggle todo action reducer', () => {
   deepFreeze(action)
 
   expect(todos(stateBefore, action)).toEqual(stateAfter)
+})
+
+test('get initial state app', () => {
+  expect(todoApp(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
+    .toEqual({
+      todos: [],
+      visibilityFilter: 'SHOW_ALL'
+    })
 })
