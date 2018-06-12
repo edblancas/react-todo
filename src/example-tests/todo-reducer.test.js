@@ -1,4 +1,5 @@
 import deepFreeze from 'deep-freeze'
+import { combineReducers } from 'redux'
 
 const todoApp = (state = {}, action) => {
   return {
@@ -12,7 +13,7 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
     case 'SET_VISIBILITY_FILTER':
       return action.visibilityFilter
     default:
-      state
+      return state
   }
 }
 
@@ -95,6 +96,22 @@ test('toggle todo action reducer', () => {
 
 test('get initial state app', () => {
   expect(todoApp(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
+    .toEqual({
+      todos: [],
+      visibilityFilter: 'SHOW_ALL'
+    })
+})
+
+// By convention, the state keys should be named after the reducers that manage them.
+// Because of this, we can use ES6 object literal shorthand notation to accomplish the same thing
+// like this:
+const todoAppCombineReducer = combineReducers({
+  todos,
+  visibilityFilter
+})
+
+test('get initial state app, with combineReducers Redux', () => {
+  expect(todoAppCombineReducer(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
     .toEqual({
       todos: [],
       visibilityFilter: 'SHOW_ALL'
