@@ -23,7 +23,7 @@ const todo = (state, action) => {
       return {
         id: action.id,
         text: action.text,
-        completed: action.completed,
+        completed: false,
       }
     case 'TOGGLE_TODO':
       if (action.id === state.id) return {...state, completed: !state.completed}
@@ -46,7 +46,7 @@ const todos = (state = [], action) => {
 
 test('test add todo action', () => {
   const stateBefore = []
-  const action = {type: 'ADD_TODO', id: 0, text: 'Learning Redux!', completed: false}
+  const action = {type: 'ADD_TODO', id: 0, text: 'Learning Redux!'}
   const stateAfter = [
     {
       id: 0,
