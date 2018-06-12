@@ -117,3 +117,22 @@ test('get initial state app, with combineReducers Redux', () => {
       visibilityFilter: 'SHOW_ALL'
     })
 })
+
+const combineReducerImp = reducers => {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      nextState[key] = reducers[key](state[key], action)
+      return nextState
+    }, {})
+  }
+}
+
+const todoAppCombineReducerImp = combineReducerImp({ todos, visibilityFilter })
+
+test('get initial state app with our implementation of combine reducers', () => {
+  expect(todoAppCombineReducerImp(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
+    .toEqual({
+      todos: [],
+      visibilityFilter: 'SHOW_ALL'
+    })
+})
