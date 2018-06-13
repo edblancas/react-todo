@@ -59,7 +59,13 @@ class TodoApp extends React.Component {
         <ul>
           {this.props.todos.map(todo =>
             // The key if because react need it for update the ui
-            <li key={todo.id}>{todo.text}</li>
+            <li key={todo.id} onClick={() => {
+              store.dispatch({
+                type: 'TOGGLE_TODO',
+                id: todo.id
+              })
+            }}
+            style={{ textDecoration: todo.completed ? 'line-through' : '' }}>{todo.text}</li>
           )}
         </ul>
       </div>
