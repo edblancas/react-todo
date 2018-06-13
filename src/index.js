@@ -8,7 +8,7 @@ import { createStore, combineReducers } from 'redux'
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
-      return action.visibilityFilter
+      return action.filter
     default:
       return state
   }
@@ -30,18 +30,45 @@ const todo = (state, action) => {
   }
 }
 
+const getVisibleTodos = (todos, filter) => {
+  switch (filter) {
+    case 'SHOW_ALL':
+      return todos
+    case 'SHOW_ACTIVE':
+      return todos.filter(t => !t.completed)
+    case 'SHOW_COMPLETED':
+      return todos.filter(t => t.completed)
+    default:
+      return todos
+  }
+}
+
 const todos = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
       return [...state, todo(state, action)]
     case 'TOGGLE_TODO':
       return state.map(t => todo(t, action))
+    case 'SET_VISIBILITY_FILTER':
+      return getVisibleTodos(state, action.filter)
     default:
       return state
   }
 }
 
-const store = createStore(combineReducers({ todos, visibilityFilter }))
+const store = createStore(
+  combineReducers({ todos, visibilityFilter }))
+
+const FilterLink = ({filter, children}) => {
+  return (
+    <a href='#' onClick={() => {
+      store.dispatch({
+          type: 'SET_VISIBILITY_FILTER',
+          filter: filter
+        })
+    }}> {children} </a>
+  )
+}
 
 let nextTodoId = 0
 class TodoApp extends React.Component {
@@ -56,6 +83,15 @@ class TodoApp extends React.Component {
             text: this.input.value
           })
         }}>Add</button>
+        <p>
+          Show:
+          {' '}
+          <FilterLink filter='SHOW_ALL'>ALL</FilterLink>
+          {' '}
+          <FilterLink filter='SHOW_COMPLETED'>Completed</FilterLink>
+          {' '}
+          <FilterLink filter='SHOW_ACTIVE'>Active</FilterLink>
+        </p>
         <ul>
           {this.props.todos.map(todo =>
             // The key if because react need it for update the ui
