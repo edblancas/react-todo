@@ -49,8 +49,6 @@ const todos = (state = [], action) => {
       return [...state, todo(state, action)]
     case 'TOGGLE_TODO':
       return state.map(t => todo(t, action))
-    case 'SET_VISIBILITY_FILTER':
-      return getVisibleTodos(state, action.filter)
     default:
       return state
   }
@@ -61,20 +59,29 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-const FilterLink = ({filter, children}) => {
-  return (
-    <a href='#' onClick={() => {
-      store.dispatch({
+const FilterLink = ({ filter, currentFilter, children }) => {
+  return filter !== currentFilter ? (
+    <a
+      href="#"
+      onClick={() => {
+        store.dispatch({
           type: 'SET_VISIBILITY_FILTER',
-          filter: filter
+          filter,
         })
-    }}> {children} </a>
+      }}
+    >
+      {children}
+    </a>
+  ) : (
+    <span>{children}</span>
   )
 }
 
 let nextTodoId = 0
 class TodoApp extends React.Component {
   render() {
+    const { todos, visibilityFilter } = this.props
+    const visibleTodos = getVisibleTodos(todos, visibilityFilter)
     return (
       <div>
         <input type="text" ref={node => this.input = node}/>
@@ -88,14 +95,14 @@ class TodoApp extends React.Component {
         <p>
           Show:
           {' '}
-          <FilterLink filter='SHOW_ALL'>ALL</FilterLink>
+          <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>ALL</FilterLink>
           {' '}
-          <FilterLink filter='SHOW_COMPLETED'>Completed</FilterLink>
+          <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>Completed</FilterLink>
           {' '}
-          <FilterLink filter='SHOW_ACTIVE'>Active</FilterLink>
+          <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>Active</FilterLink>
         </p>
         <ul>
-          {this.props.todos.map(todo =>
+          {visibleTodos.map(todo =>
             // The key if because react need it for update the ui
             <li key={todo.id} onClick={() => {
               store.dispatch({
@@ -112,7 +119,7 @@ class TodoApp extends React.Component {
 }
 
 const render = () => {
-  ReactDOM.render(<TodoApp todos={store.getState().todos} />, document.getElementById('root'));
+  ReactDOM.render(<TodoApp {...store.getState()} />, document.getElementById('root'));
 }
 store.subscribe(render)
 render()
