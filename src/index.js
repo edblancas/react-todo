@@ -57,7 +57,9 @@ const todos = (state = [], action) => {
 }
 
 const store = createStore(
-  combineReducers({ todos, visibilityFilter }))
+  combineReducers({ todos, visibilityFilter }),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
 
 const FilterLink = ({filter, children}) => {
   return (
