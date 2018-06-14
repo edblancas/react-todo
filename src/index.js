@@ -95,38 +95,43 @@ const AddTodo = ({onAddClick}) => {
   )
 }
 
-const FilterLink = ({filter, currentFilter, children, onClick}) =>
-  filter !== currentFilter ? (
-    <a
-      href="#"
-      onClick={() => {
-        onClick(filter)
-      }}
-    >
+const Filters = () => (
+  <p>
+    Show: <FilterLink filter="SHOW_ALL">ALL</FilterLink>{' '}
+    <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>{' '}
+    <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>
+  </p>
+)
+
+// There is a small problem with this implementation of FilterLink. Inside the render() method it
+// reads the current state of the Redux store, however it does not subscribe to the store. So if
+// the parent component doesn't update when the store is updated, the correct value won't be rendered.
+//
+// Also, we currently re-render the entire application when the state changes, which isn't very
+// efficient. In the future, we will move subscription to the store to the lifecycle methods of
+// the container components.
+const FilterLink = ({filter, children}) => (
+  <Link
+    onLinkClick={filter => {
+      store.dispatch({
+        type: 'SET_VISIBILITY_FILTER',
+        filter,
+      })
+    }}
+    active={filter === store.getState().visibilityFilter}
+  >
+    {children}
+  </Link>
+)
+
+const Link = ({active, onLinkClick, children}) =>
+  !active ? (
+    <a href="#" onClick={onLinkClick}>
       {children}
     </a>
   ) : (
     <span>{children}</span>
   )
-
-const Filters = ({visibilityFilter, onFilterLinkClick}) => (
-  <p>
-    Show:{' '}
-    <FilterLink filter="SHOW_ALL" currentFilter={visibilityFilter} onClick={onFilterLinkClick}>
-      ALL
-    </FilterLink>{' '}
-    <FilterLink
-      filter="SHOW_COMPLETED"
-      currentFilter={visibilityFilter}
-      onClick={onFilterLinkClick}
-    >
-      Completed
-    </FilterLink>{' '}
-    <FilterLink filter="SHOW_ACTIVE" currentFilter={visibilityFilter} onClick={onFilterLinkClick}>
-      Active
-    </FilterLink>
-  </p>
-)
 
 let nextTodoId = 0
 const TodoApp = ({todos, visibilityFilter}) => {
@@ -143,12 +148,6 @@ const TodoApp = ({todos, visibilityFilter}) => {
         />
         <Filters
           visibilityFilter={visibilityFilter}
-          onFilterLinkClick={filter => {
-            store.dispatch({
-              type: 'SET_VISIBILITY_FILTER',
-              filter,
-            })
-          }}
         />
         <TodoList
           todos={getVisibleTodos(todos, visibilityFilter)}
