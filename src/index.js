@@ -111,6 +111,18 @@ const Filters = () => (
 // efficient. In the future, we will move subscription to the store to the lifecycle methods of
 // the container components.
 class FilterLink extends React.Component {
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  // Since the subscription happens in `componentDidMount`,
+  // it's important to unsubscribe in `componentWillUnmount`.
+  componentWillUnmount() {
+    this.unsubscribe(); // return value of `store.subscribe()`
+  }
+  
   render() {
     const {visibilityFilter} = store.getState()
     const {filter, children} = this.props
@@ -152,9 +164,7 @@ const TodoApp = ({todos, visibilityFilter}) => {
             })
           }}
         />
-        <Filters
-          visibilityFilter={visibilityFilter}
-        />
+        <Filters />
         <TodoList
           todos={getVisibleTodos(todos, visibilityFilter)}
           onTodoClick={id => {
