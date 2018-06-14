@@ -104,25 +104,31 @@ const Filters = () => (
 )
 
 // There is a small problem with this implementation of FilterLink. Inside the render() method it
-// reads the current state of the Redux store, however it does not subscribe to the store. So if
-// the parent component doesn't update when the store is updated, the correct value won't be rendered.
+// reads the current state of the Redux store, however it does not subscribe to the store.
+// So if the parent component doesn't update when the store is updated, the correct value won't be rendered.
 //
-// Also, we currently re-render the entire application when the state changes, which isn't very
+// But we currently re-render the entire application when the state changes, which isn't very
 // efficient. In the future, we will move subscription to the store to the lifecycle methods of
 // the container components.
-const FilterLink = ({filter, children}) => (
-  <Link
-    onLinkClick={filter => {
-      store.dispatch({
-        type: 'SET_VISIBILITY_FILTER',
-        filter,
-      })
-    }}
-    active={filter === store.getState().visibilityFilter}
-  >
-    {children}
-  </Link>
-)
+class FilterLink extends React.Component {
+  render() {
+    const {visibilityFilter} = store.getState()
+    const {filter, children} = this.props
+    return (
+      <Link
+        onLinkClick={() => {
+          store.dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter,
+          })
+        }}
+        active={filter === visibilityFilter}
+      >
+        {children}
+      </Link>
+    )
+  }
+}
 
 const Link = ({active, onLinkClick, children}) =>
   !active ? (
