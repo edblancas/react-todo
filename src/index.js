@@ -5,6 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, combineReducers } from 'redux'
 import PropTypes from 'prop-types'
+import { Provider } from 'react-redux'
 
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
@@ -196,23 +197,6 @@ const TodoApp = ({store}) => (
         <VisibleTodoList />
       </div>
     )
-
-class Provider extends React.Component {
-  getChildContext() {
-    return {
-      store: this.props.store
-    }
-  }
-
-  render () {
-    return (
-      this.props.children
-    )
-  }
-}
-Provider.childContextTypes = {
-  store: PropTypes.object
-}
 
 const todoApp = combineReducers({ todos, visibilityFilter })
 const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
