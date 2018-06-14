@@ -52,11 +52,6 @@ const todos = (state = [], action) => {
   }
 }
 
-const store = createStore(
-  combineReducers({ todos, visibilityFilter }),
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-)
-
 // We can remove the key property, since it's only needed when we enumerate an array
 // (we'll use it later when we have to enumerate many todos).
 const Todo = ({onClick, completed, text}) =>
@@ -78,6 +73,7 @@ const TodoList = ({todos, onTodoClick}) =>
 
 class VisibleTodoList extends React.Component {
   componentDidMount() {
+    const {store} = this.props
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     )
@@ -88,6 +84,7 @@ class VisibleTodoList extends React.Component {
   }
 
   render() {
+    const {store} = this.props
     const {todos, visibilityFilter} = store.getState()
     return (
       <TodoList
@@ -103,7 +100,7 @@ class VisibleTodoList extends React.Component {
   }
 }
 
-const AddTodo = ({onAddClick}) => {
+const AddTodo = ({onAddClick, store}) => {
   let input
   return (
     <div>
@@ -123,11 +120,11 @@ const AddTodo = ({onAddClick}) => {
   )
 }
 
-const Filters = () => (
+const Filters = ({store}) => (
   <p>
-    Show: <FilterLink filter="SHOW_ALL">ALL</FilterLink>{' '}
-    <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>{' '}
-    <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>
+    Show: <FilterLink filter="SHOW_ALL" store={store}>ALL</FilterLink>{' '}
+    <FilterLink filter="SHOW_COMPLETED" store={store}>Completed</FilterLink>{' '}
+    <FilterLink filter="SHOW_ACTIVE" store={store}>Active</FilterLink>
   </p>
 )
 
@@ -140,6 +137,7 @@ const Filters = () => (
 // the container components.
 class FilterLink extends React.Component {
   componentDidMount() {
+    const {store} = this.props
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     );
@@ -152,6 +150,7 @@ class FilterLink extends React.Component {
   }
 
   render() {
+    const {store} = this.props
     const {visibilityFilter} = store.getState()
     const {filter, children} = this.props
     return (
@@ -180,14 +179,17 @@ const Link = ({active, onLinkClick, children}) =>
   )
 
 let nextTodoId = 0
-const TodoApp = () => (
+const TodoApp = ({store}) => (
       <div>
-        <AddTodo />
-        <Filters />
-        <VisibleTodoList />
+        <AddTodo store={store} />
+        <Filters store={store} />
+        <VisibleTodoList store={store} />
       </div>
     )
 
-ReactDOM.render(<TodoApp />, document.getElementById('root'))
+const todoApp = combineReducers({ todos, visibilityFilter })
+const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
+ReactDOM.render(<TodoApp store={createStore(todoApp, reduxDevTools)} />, document.getElementById('root'))
 
 registerServiceWorker();
