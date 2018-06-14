@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, combineReducers } from 'redux'
+import PropTypes from 'prop-types'
 
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
@@ -73,7 +74,7 @@ const TodoList = ({todos, onTodoClick}) =>
 
 class VisibleTodoList extends React.Component {
   componentDidMount() {
-    const {store} = this.props
+    const {store} = this.context
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     )
@@ -84,7 +85,7 @@ class VisibleTodoList extends React.Component {
   }
 
   render() {
-    const {store} = this.props
+    const {store} = this.context
     const {todos, visibilityFilter} = store.getState()
     return (
       <TodoList
@@ -99,8 +100,11 @@ class VisibleTodoList extends React.Component {
     )
   }
 }
+VisibleTodoList.contextTypes = {
+  store: PropTypes.object
+}
 
-const AddTodo = ({onAddClick, store}) => {
+const AddTodo = (props, {store}) => {
   let input
   return (
     <div>
@@ -118,6 +122,9 @@ const AddTodo = ({onAddClick, store}) => {
       </button>
     </div>
   )
+}
+AddTodo.contextTypes = {
+  store: PropTypes.object
 }
 
 const Filters = ({store}) => (
@@ -137,7 +144,7 @@ const Filters = ({store}) => (
 // the container components.
 class FilterLink extends React.Component {
   componentDidMount() {
-    const {store} = this.props
+    const {store} = this.context
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     );
@@ -150,7 +157,7 @@ class FilterLink extends React.Component {
   }
 
   render() {
-    const {store} = this.props
+    const {store} = this.context
     const {visibilityFilter} = store.getState()
     const {filter, children} = this.props
     return (
@@ -168,6 +175,9 @@ class FilterLink extends React.Component {
     )
   }
 }
+FilterLink.contextTypes = {
+  store: PropTypes.object
+}
 
 const Link = ({active, onLinkClick, children}) =>
   !active ? (
@@ -181,15 +191,37 @@ const Link = ({active, onLinkClick, children}) =>
 let nextTodoId = 0
 const TodoApp = ({store}) => (
       <div>
-        <AddTodo store={store} />
-        <Filters store={store} />
-        <VisibleTodoList store={store} />
+        <AddTodo />
+        <Filters />
+        <VisibleTodoList />
       </div>
     )
+
+class Provider extends React.Component {
+  getChildContext() {
+    return {
+      store: this.props.store
+    }
+  }
+
+  render () {
+    return (
+      this.props.children
+    )
+  }
+}
+Provider.childContextTypes = {
+  store: PropTypes.object
+}
 
 const todoApp = combineReducers({ todos, visibilityFilter })
 const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
-ReactDOM.render(<TodoApp store={createStore(todoApp, reduxDevTools)} />, document.getElementById('root'))
+ReactDOM.render(
+<Provider store={createStore(todoApp, reduxDevTools)}>
+	<TodoApp />
+</Provider>
+, document.getElementById('root')
+)
 
 registerServiceWorker();
