@@ -106,10 +106,16 @@ let AddTodo = ({dispatch}) => {
     </div>
   )
 }
-AddTodo = connect(
-	state => ({}),
-	dispatch => ({dispatch})
-)(AddTodo)
+// But it's wasteful.
+// Why subscribe to the store if we aren't going to calculate props from the state?
+// Because we don't need to subcribe to the store, we can call connect() without
+// mapStateToProps as an argument, instead passing in null. What this does is tell
+// connect that there is no need to subscribe to the store.
+// It's a common pattern to inject just the dispatch function, so if connect() sees
+// that the second argument is null (or any falsey value), you'll get dispatch
+// injected as a prop.
+AddTodo = connect()(AddTodo)
+
 
 const Filters = ({store}) => (
   <p>
