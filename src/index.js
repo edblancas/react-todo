@@ -86,14 +86,15 @@ const mapDispatchToPropsVisibleTodoList = (dispatch) => ({
 })
 const VisibleTodoList = connect(mapStateToPropsVisibleTodoList, mapDispatchToPropsVisibleTodoList)(TodoList)
 
-const AddTodo = (props, {store}) => {
+let nextTodoId = 0
+let AddTodo = ({dispatch}) => {
   let input
   return (
     <div>
       <input type="text" ref={node => (input = node)} />
       <button
         onClick={() => {
-            store.dispatch({
+            dispatch({
               type: 'ADD_TODO',
               id: nextTodoId++,
               text: input.value,
@@ -105,9 +106,10 @@ const AddTodo = (props, {store}) => {
     </div>
   )
 }
-AddTodo.contextTypes = {
-  store: PropTypes.object
-}
+AddTodo = connect(
+	state => ({}),
+	dispatch => ({dispatch})
+)(AddTodo)
 
 const Filters = ({store}) => (
   <p>
@@ -170,7 +172,6 @@ const Link = ({active, onLinkClick, children}) =>
     <span>{children}</span>
   )
 
-let nextTodoId = 0
 const TodoApp = ({store}) => (
       <div>
         <AddTodo />
