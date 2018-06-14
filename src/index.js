@@ -77,6 +77,26 @@ const FilterLink = ({ filter, currentFilter, children }) => {
   )
 }
 
+// We can remove the key property, since it's only needed when we enumerate an array
+// (we'll use it later when we have to enumerate many todos).
+const Todo = ({onClick, completed, text}) =>
+    <li
+      onClick={onClick}
+      style={{ textDecoration: completed ? 'line-through' : '' }}
+    >
+      {text}
+    </li>
+
+const TodoList = ({todos, onTodoClick}) =>
+  <ul>
+    {todos.map(todo =>
+      // The key if because react need it for update the ui
+      <Todo key={todo.id} {...todo}
+      onClick={() => onTodoClick(todo.id)}/>,
+    )}
+  </ul>
+
+
 let nextTodoId = 0
 class TodoApp extends React.Component {
   render() {
@@ -91,36 +111,32 @@ class TodoApp extends React.Component {
             id: nextTodoId++,
             text: this.input.value
           })
-        }}>Add</button>
+          this.input.value = ''
+        }}>Add
+        </button>
         <p>
           Show:
           {' '}
           <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>ALL</FilterLink>
           {' '}
-          <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>Completed</FilterLink>
+          <FilterLink filter='SHOW_COMPLETED'
+                      currentFilter={visibilityFilter}>Completed</FilterLink>
           {' '}
           <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>Active</FilterLink>
         </p>
-        <ul>
-          {visibleTodos.map(todo =>
-            // The key if because react need it for update the ui
-            <li key={todo.id} onClick={() => {
-              store.dispatch({
-                type: 'TOGGLE_TODO',
-                id: todo.id
-              })
-            }}
-            style={{ textDecoration: todo.completed ? 'line-through' : '' }}>{todo.text}</li>
-          )}
-        </ul>
+        <TodoList todos={visibleTodos}
+                  onTodoClick={id => {
+                    store.dispatch({
+                      type: 'TOGGLE_TODO',
+                       id,
+                    })
+                  }}/>
       </div>
     )
   }
 }
 
-const render = () => {
-  ReactDOM.render(<TodoApp {...store.getState()} />, document.getElementById('root'));
-}
+const render = () => ReactDOM.render(<TodoApp {...store.getState()} />, document.getElementById('root'))
 store.subscribe(render)
 render()
 
