@@ -3,9 +3,9 @@ import FilterLink from './FilterLink'
 
 const Filters = () => (
   <p>
-    Show: <FilterLink filter="SHOW_ALL">ALL</FilterLink>{' '}
-    <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>{' '}
-    <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>
+    Show: <FilterLink filter="all">ALL</FilterLink>{' '}
+    <FilterLink filter="completed">Completed</FilterLink>{' '}
+    <FilterLink filter="active">Active</FilterLink>
   </p>
 )
 
