@@ -3,11 +3,11 @@ import AddTodo from './AddTodo'
 import Filters from './Filters'
 import VisibleTodoList from './VisibleTodoList'
 
-const App = ({match}) => (
+const App = () => (
   <div>
     <AddTodo />
     <Filters />
-    <VisibleTodoList filter={match.params.filter || 'all'}/>
+    <VisibleTodoList />
   </div>
 )
 
