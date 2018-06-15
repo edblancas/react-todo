@@ -7,6 +7,31 @@ import { createStore, combineReducers } from 'redux'
 import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
 
+// Action Creators
+let nextTodoId = 0
+const addTodo = text => {
+  return {
+    type: 'ADD_TODO',
+    id: nextTodoId++,
+    text: text,
+  }
+}
+
+const toggleTodo = id => {
+  return {
+    type: 'TOGGLE_TODO',
+    id,
+  }
+}
+
+const setVisibilityFilter = filter => {
+  return {
+    type: 'SET_VISIBILITY_FILTER',
+    filter: filter,
+  }
+}
+
+// Reducers
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
@@ -76,17 +101,13 @@ const TodoList = ({todos, onTodoClick}) =>
 const mapStateToPropsVisibleTodoList = (state) => ({
 	todos: getVisibleTodos(state.todos, state.visibilityFilter)
 })
-const mapDispatchToPropsVisibleTodoList = (dispatch) => ({
-	onTodoClick: id => {
-          dispatch({
-            type: 'TOGGLE_TODO',
-            id,
-          })
-        }
+const mapDispatchToPropsVisibleTodoList = dispatch => ({
+  onTodoClick: id => {
+    dispatch(toggleTodo(id))
+  },
 })
 const VisibleTodoList = connect(mapStateToPropsVisibleTodoList, mapDispatchToPropsVisibleTodoList)(TodoList)
 
-let nextTodoId = 0
 let AddTodo = ({dispatch}) => {
   let input
   return (
@@ -94,11 +115,7 @@ let AddTodo = ({dispatch}) => {
       <input type="text" ref={node => (input = node)} />
       <button
         onClick={() => {
-            dispatch({
-              type: 'ADD_TODO',
-              id: nextTodoId++,
-              text: input.value,
-            })
+            dispatch(addTodo(input.value))
             input.value = ''
           }}>
         Add
@@ -147,10 +164,7 @@ const mapStateTpPropsFilterLink = (state, ownProps) => {
 const mapDispatchToPropsFilterLink = (dispatch, ownProps) => {
   return {
         onLinkClick: () => {
-          dispatch({
-            type: 'SET_VISIBILITY_FILTER',
-            filter: ownProps.filter
-          })
+          dispatch(setVisibilityFilter(ownProps.filter))
         }
   }
 }
