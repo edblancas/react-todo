@@ -9,27 +9,21 @@ import {Provider, connect} from 'react-redux'
 // Action Creators
 
 let nextTodoId = 0
-const addTodo = text => {
-  return {
-    type: 'ADD_TODO',
-    id: nextTodoId++,
-    text: text,
-  }
-}
+const addTodo = text => ({
+  type: 'ADD_TODO',
+  id: nextTodoId++,
+  text: text,
+})
 
-const toggleTodo = id => {
-  return {
-    type: 'TOGGLE_TODO',
-    id,
-  }
-}
+const toggleTodo = id => ({
+  type: 'TOGGLE_TODO',
+  id,
+})
 
-const setVisibilityFilter = filter => {
-  return {
-    type: 'SET_VISIBILITY_FILTER',
-    filter: filter,
-  }
-}
+const setVisibilityFilter = filter => ({
+  type: 'SET_VISIBILITY_FILTER',
+  filter: filter,
+})
 
 // Reducers
 
@@ -141,18 +135,14 @@ const Link = ({active, onLinkClick, children}) =>
   ) : (
     <span>{children}</span>
   )
-const mapStateTpPropsFilterLink = (state, ownProps) => {
-  return {
+const mapStateTpPropsFilterLink = (state, ownProps) => ({
     active: ownProps.filter === state.visibilityFilter,
-  }
-}
-const mapDispatchToPropsFilterLink = (dispatch, ownProps) => {
-  return {
+})
+const mapDispatchToPropsFilterLink = (dispatch, ownProps) => ({
     onLinkClick: () => {
       dispatch(setVisibilityFilter(ownProps.filter))
     },
-  }
-}
+})
 const FilterLink = connect(
   mapStateTpPropsFilterLink,
   mapDispatchToPropsFilterLink,
