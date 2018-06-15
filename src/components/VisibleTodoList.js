@@ -20,10 +20,13 @@ const mapStateToPropsVisibleTodoList = (state, {match}) => ({
   todos: getVisibleTodos(state.todos, match.params.filter),
 })
 
-const mapDispatchToPropsVisibleTodoList = dispatch => ({
-  onTodoClick: id => {
-    dispatch(toggleTodo(id))
-  },
+// When the arguments for the callback prop match the arguments to the action
+// creator exactly, there is a shorter way to specify mapDispatchToProps.
+// Rather than pass a function, we can pass an object mapping of the names of
+// the callback props that we want to inject and the action creator functions
+// that create the corresponding actions.
+const mapDispatchToPropsVisibleTodoList = ({
+  onTodoClick: toggleTodo
 })
 
 const VisibleTodoList = withRouter(
