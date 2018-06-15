@@ -106,6 +106,7 @@ let AddTodo = ({dispatch}) => {
     </div>
   )
 }
+
 // But it's wasteful.
 // Why subscribe to the store if we aren't going to calculate props from the state?
 // Because we don't need to subcribe to the store, we can call connect() without
@@ -116,58 +117,13 @@ let AddTodo = ({dispatch}) => {
 // injected as a prop.
 AddTodo = connect()(AddTodo)
 
-
-const Filters = ({store}) => (
+const Filters = () => (
   <p>
-    Show: <FilterLink filter="SHOW_ALL" store={store}>ALL</FilterLink>{' '}
-    <FilterLink filter="SHOW_COMPLETED" store={store}>Completed</FilterLink>{' '}
-    <FilterLink filter="SHOW_ACTIVE" store={store}>Active</FilterLink>
+    Show: <FilterLink filter="SHOW_ALL" >ALL</FilterLink>{' '}
+    <FilterLink filter="SHOW_COMPLETED" >Completed</FilterLink>{' '}
+    <FilterLink filter="SHOW_ACTIVE" >Active</FilterLink>
   </p>
 )
-
-// There is a small problem with this implementation of FilterLink. Inside the render() method it
-// reads the current state of the Redux store, however it does not subscribe to the store.
-// So if the parent component doesn't update when the store is updated, the correct value won't be rendered.
-//
-// But we currently re-render the entire application when the state changes, which isn't very
-// efficient. In the future, we will move subscription to the store to the lifecycle methods of
-// the container components.
-class FilterLink extends React.Component {
-  componentDidMount() {
-    const {store} = this.context
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-
-  // Since the subscription happens in `componentDidMount`,
-  // it's important to unsubscribe in `componentWillUnmount`.
-  componentWillUnmount() {
-    this.unsubscribe(); // return value of `store.subscribe()`
-  }
-
-  render() {
-    const {store} = this.context
-    const {visibilityFilter} = store.getState()
-    const {filter, children} = this.props
-    return (
-      <Link
-        onLinkClick={() => {
-          store.dispatch({
-            type: 'SET_VISIBILITY_FILTER',
-            filter,
-          })
-        }}
-        active={filter === visibilityFilter}
-      >
-        {children}
-      </Link>
-    )
-  }
-}
-FilterLink.contextTypes = {
-  store: PropTypes.object
-}
 
 const Link = ({active, onLinkClick, children}) =>
   !active ? (
@@ -178,7 +134,30 @@ const Link = ({active, onLinkClick, children}) =>
     <span>{children}</span>
   )
 
-const TodoApp = ({store}) => (
+// It's common to use the container props when calculating the child props, so we
+// pass them in as a second argument to mapStateToProps. In this case, we'll
+// rename it to ownProps to make it more clear that we are talking about the
+// container component's own props, and not the props that are passed to the
+// child, which is the return value of mapStateToProps.
+const mapStateTpPropsFilterLink = (state, ownProps) => {
+  return {
+    active: ownProps.filter === state.visibilityFilter
+  }
+}
+const mapDispatchToPropsFilterLink = (dispatch, ownProps) => {
+  return {
+        onLinkClick: () => {
+          dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter: ownProps.filter
+          })
+        }
+  }
+}
+const FilterLink = connect(mapStateTpPropsFilterLink,
+mapDispatchToPropsFilterLink)(Link)
+
+const TodoApp = () => (
       <div>
         <AddTodo />
         <Filters />
