@@ -25,8 +25,8 @@ export const fetchTodos = (filter) =>
       default:
         return fakeDatabase.todos
       case 'completed':
-        return fakeDatabase.todos.map(t => t.completed)
+        return fakeDatabase.todos.filter(t => t.completed)
       case 'active':
-        return fakeDatabase.todos.map(t => !t.completed)
+        return fakeDatabase.todos.filter(t => !t.completed)
     }
   })
