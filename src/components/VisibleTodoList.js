@@ -1,4 +1,8 @@
-import {toggleTodo} from '../actions'
+// We can start by replacing named imports with a namespace import.
+// This means that any function exported from the actions file will be in the
+// object called actions, which we will pass as a second argument to connect.
+import * as actions from '../actions'
+// import {toggleTodo, receiveTodos} from '../actions'
 import TodoList from './TodoList'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
@@ -13,16 +17,28 @@ const mapStateToProps = (state, {match}) => ({
 
 class VisibleTodoList extends React.Component {
   componentDidMount() {
-    fetchTodos().then(response => console.log(response))
+    this.fetchData()
   }
 
   componentDidUpdate(prevProps, prevState) {
     if(prevProps.filter !== this.props.filter)
-      fetchTodos(this.props.filter).then(response => console.log(response))
+      this.fetchData()
+  }
+
+  fetchData() {
+    // We use the ES6 destructuring syntax to get the filter and receiveTodos
+    // from props. It's important that I destructure the filter right away,
+    // because by the time the callback fires, this.props.filter might have
+    // changed because the user might have navigated away.
+    const {filter, receiveTodos} = this.props
+    fetchTodos(filter)
+      .then(todos => receiveTodos(todos, filter))
   }
 
   render() {
-    return <TodoList {...this.props}/>
+    const {toggleTodo, ...rest} = this.props
+    // return <TodoList {...this.props}/>
+    return <TodoList {...rest} onTodoClick={toggleTodo}/>
   }
 }
 
@@ -34,7 +50,8 @@ class VisibleTodoList extends React.Component {
 VisibleTodoList = withRouter(
   connect(
     mapStateToProps,
-    {onTodoClick: toggleTodo},
+    // {onTodoClick: toggleTodo, receiveTodos},
+    actions
   )(VisibleTodoList),
 )
 

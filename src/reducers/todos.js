@@ -23,7 +23,16 @@ const allIds = (state = [], action) => {
   }
 }
 
-const todos = combineReducers({byId, allIds})
+const receiveTodos = (state = [], action) => {
+  switch (action.type) {
+    case 'RECEIVE_TODOS':
+      return action.response
+    default:
+      return state
+  }
+}
+
+const todos = combineReducers({byId, allIds, receiveTodos})
 
 export default todos
 
