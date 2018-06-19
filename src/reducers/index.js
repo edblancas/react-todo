@@ -1,9 +1,23 @@
 import {combineReducers} from 'redux'
-import todos, * as fromTodos from './todos'
+import byId, * as fromById from './byId'
+import createList, * as fromCreateList from './createList'
 
-const todoApp = combineReducers({todos})
+const listByFilter = combineReducers({
+  all: createList('all'),
+  active: createList('active'),
+  completed: createList('completed')
+})
 
-export const getVisibleTodos = (state, filter) =>
-  fromTodos.getVisibleTodos(state.todos, filter)
+const todos = combineReducers({byId, idsByFilter: listByFilter})
 
-export default todoApp
+export default todos
+
+// Selector
+
+export const getVisibleTodos = (state, filter) => {
+  const ids = fromCreateList.getIds(state.idsByFilter[filter])
+  // and always in another selector, we only pass the state that corresponds
+  // to the selector we are calling
+  return ids.map(id => fromById.getTodo(state.byId, id))
+}
+
