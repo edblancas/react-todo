@@ -29,31 +29,22 @@ To make it a part of the middleware contract, we can make next an outside
 argument, just like the store before it and the action after it.
  */
 
-const logger = (store) => {
-  return (next) => {
-    return (action) => {
-      if (!console.group) return next
+const logger = store => next => action => {
+  if (!console.group) return next
 
-      console.group(action.type)
-      console.log('%c prev state', 'color: gray', store.getState())
-      console.log('%c action', 'color: blue', action)
-      const returnValue = next(action)
-      console.log('%c next state', 'color: green', store.getState())
-      console.groupEnd(action.type)
+  console.group(action.type)
+  console.log('%c prev state', 'color: gray', store.getState())
+  console.log('%c action', 'color: blue', action)
+  const returnValue = next(action)
+  console.log('%c next state', 'color: green', store.getState())
+  console.groupEnd(action.type)
 
-      return returnValue
-    }
-  }
+  return returnValue
 }
 
-const promise = (store) => {
-  return (next) => {
-    return (action) => {
-      if (typeof action.then === 'function')
-        return action.then(next)
-      return next(action)
-    }
-  }
+const promise = store => next => action => {
+  if (typeof action.then === 'function') return action.then(next)
+  return next(action)
 }
 
 const applyMiddlewareToDispatch = (store, middlewares) => {
