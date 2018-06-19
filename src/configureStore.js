@@ -7,6 +7,8 @@ const configureStore = () => {
   if (process.env.NODE_ENV !== 'production')
     store.dispatch = addLoggingToDispatch(store)
 
+  store.dispatch = addPromiseSupportToDispatch(store)
+
   return store
 }
 
@@ -28,5 +30,14 @@ const addLoggingToDispatch = (store) => {
     console.groupEnd(action.type)
 
     return returnValue
+  }
+}
+
+const addPromiseSupportToDispatch = (store) => {
+  const rawDipatch = store.dispatch
+  return (action) => {
+    if (typeof action.then === 'function')
+      return action.then(rawDipatch)
+   return rawDipatch(action)
   }
 }

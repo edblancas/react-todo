@@ -7,7 +7,6 @@ import TodoList from './TodoList'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {getVisibleTodos} from '../reducers'
-import {fetchTodos} from '../api'
 import React from 'react'
 
 const mapStateToProps = (state, {match}) => ({
@@ -26,13 +25,12 @@ class VisibleTodoList extends React.Component {
   }
 
   fetchData() {
-    // We use the ES6 destructuring syntax to get the filter and receiveTodos
-    // from props. It's important that I destructure the filter right away,
+    // We use the ES6 destructuring syntax to get the filter from props.
+    // It's important that I destructure the filter right away,
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
-    const {filter, receiveTodos} = this.props
+    const {filter, fetchTodos} = this.props
     fetchTodos(filter)
-      .then(todos => receiveTodos(todos, filter))
   }
 
   render() {
