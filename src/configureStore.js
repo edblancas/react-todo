@@ -1,14 +1,14 @@
-import {createStore, applyMiddleware} from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import todoApp from './reducers'
 
 const configureStore = () => {
-  const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const middlewares = [promise]
 
   if (process.env.NODE_ENV !== 'production')
     middlewares.push(logger)
 
-  return createStore(todoApp, applyMiddleware(...middlewares))
+  return createStore(todoApp, composeEnhancers(applyMiddleware(...middlewares)))
 }
 
 export default configureStore
