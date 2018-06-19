@@ -30,9 +30,6 @@ argument, just like the store before it and the action after it.
  */
 
 const logger = (store) => {
-  // If we dont obtain the raw dispatch, when we change the store.dispatch we
-  // are going to have a recursive ref, cause the store.dispatch inside the
-  // returning function is going to ref the dispatch changed ref
   return (next) => {
     return (action) => {
       if (!console.group) return next
