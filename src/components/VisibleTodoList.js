@@ -9,10 +9,13 @@ import {withRouter} from 'react-router-dom'
 import {getVisibleTodos} from '../reducers'
 import React from 'react'
 
-const mapStateToProps = (state, {match}) => ({
-  todos: getVisibleTodos(state, match.params.filter || 'all'),
-  filter: match.params.filter
-})
+const mapStateToProps = (state, {match}) => {
+  const filter = match.params.filter || 'all'
+  return {
+    todos: getVisibleTodos(state, filter),
+    filter,
+  }
+}
 
 class VisibleTodoList extends React.Component {
   componentDidMount() {
