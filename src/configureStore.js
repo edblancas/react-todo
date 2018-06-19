@@ -4,28 +4,38 @@ import todoApp from './reducers'
 const configureStore = () => {
   const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   const store = createStore(todoApp, reduxDevTools)
-  if (process.env.NODE_ENV !== 'production')
-    store.dispatch = addLoggingToDispatch(store)
+  const middlewares = [promise]
 
-  store.dispatch = addPromiseSupportToDispatch(store)
+  if (process.env.NODE_ENV !== 'production')
+    middlewares.push(logger)
+
+  applyMiddlewareToDispatch(store, middlewares)
 
   return store
 }
 
 export default configureStore
 
-const addLoggingToDispatch = (store) => {
+/*
+Since store.dispatch was reassigned earlier (inside of configureStore),
+it's not completely fair to refer to it as rawDispatch inside of
+addPromiseSupportToDispatch.
+We'll rename rawDispatch to next, because this is the next dispatch
+function in the chain.
+ */
+
+const logger = (store) => {
   // If we dont obtain the raw dispatch, when we change the store.dispatch we
   // are going to have a recursive ref, cause the store.dispatch inside the
   // returning function is going to ref the dispatch changed ref
-  const rawDispatch = store.dispatch
+  const next = store.dispatch
   return (action) => {
-    if (!console.group) return rawDispatch
+    if (!console.group) return next
 
     console.group(action.type)
     console.log('%c prev state', 'color: gray', store.getState())
     console.log('%c action', 'color: blue', action)
-    const returnValue = rawDispatch(action)
+    const returnValue = next(action)
     console.log('%c next state', 'color: green', store.getState())
     console.groupEnd(action.type)
 
@@ -33,11 +43,17 @@ const addLoggingToDispatch = (store) => {
   }
 }
 
-const addPromiseSupportToDispatch = (store) => {
-  const rawDipatch = store.dispatch
+const promise = (store) => {
+  const next = store.dispatch
   return (action) => {
     if (typeof action.then === 'function')
-      return action.then(rawDipatch)
-   return rawDipatch(action)
+      return action.then(next)
+   return next(action)
   }
+}
+
+const applyMiddlewareToDispatch = (store, middlewares) => {
+  middlewares.slice().reverse().forEach(middleware => {
+    store.dispatch = middleware(store)
+  })
 }
