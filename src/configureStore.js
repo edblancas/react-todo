@@ -6,7 +6,7 @@ const thunk = store => next => action => {
   typeof action === 'function'?
     // it must be the store.dispatch, cause the next dispatch middleware
     // in chain
-    action(store.dispatch) :
+    action(store.dispatch, store.getState) :
     next(action)
 }
 
