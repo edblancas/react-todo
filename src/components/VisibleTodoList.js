@@ -5,15 +5,17 @@ import * as actions from '../actions'
 import TodoList from './TodoList'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {getVisibleTodos, getIsFetching} from '../reducers'
+import {getVisibleTodos, getIsFetching, getErrorMessage} from '../reducers'
 import React from 'react'
+import FetchError from './FetchError'
 
 const mapStateToProps = (state, {match}) => {
   const filter = match.params.filter || 'all'
   return {
     todos: getVisibleTodos(state, filter),
     filter,
-    isFetching: getIsFetching(state, filter)
+    isFetching: getIsFetching(state, filter),
+    errorMessage: getErrorMessage(state, filter)
   }
 }
 
@@ -32,14 +34,18 @@ class VisibleTodoList extends React.Component {
     // It's important that I destructure the filter right away,
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
-    const {filter, fetchTodos} = this.props
+    const {filter, fetchTodos, errorMessage} = this.props
     fetchTodos(filter).then(() => console.log('done!'))
   }
 
   render() {
-    const {toggleTodo, isFetching, todos} = this.props
+    const {toggleTodo, isFetching, todos, errorMessage} = this.props
     if (isFetching && !todos.length)
       return <p>Loading...</p>
+    console.log(errorMessage, todos.length)
+    if (errorMessage && !todos.length)
+      // note: se debe passar un arrow fn para que se haga el bind automatico de this
+      return <FetchError errorMessage={errorMessage} onRetry={() => this.fetchData()} />
     return <TodoList todos={todos} onTodoClick={toggleTodo}/>
   }
 }
