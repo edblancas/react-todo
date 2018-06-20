@@ -2,7 +2,6 @@
 // This means that any function exported from the actions file will be in the
 // object called actions, which we will pass as a second argument to connect.
 import * as actions from '../actions'
-// import {toggleTodo, receiveTodos} from '../actions'
 import TodoList from './TodoList'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
@@ -34,7 +33,7 @@ class VisibleTodoList extends React.Component {
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
     const {filter, fetchTodos} = this.props
-    fetchTodos(filter)
+    fetchTodos(filter).then(() => console.log('done!'))
   }
 
   render() {
@@ -53,7 +52,6 @@ class VisibleTodoList extends React.Component {
 VisibleTodoList = withRouter(
   connect(
     mapStateToProps,
-    // {onTodoClick: toggleTodo, receiveTodos},
     actions
   )(VisibleTodoList),
 )
