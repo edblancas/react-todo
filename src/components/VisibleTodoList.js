@@ -33,8 +33,7 @@ class VisibleTodoList extends React.Component {
     // It's important that I destructure the filter right away,
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
-    const {filter, fetchTodos, requestTodos} = this.props
-    requestTodos(filter)
+    const {filter, fetchTodos} = this.props
     fetchTodos(filter)
   }
 

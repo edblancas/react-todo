@@ -1,11 +1,18 @@
 import {createStore, applyMiddleware, compose} from 'redux'
 import todoApp from './reducers'
-import promise from 'redux-promise'
 import {createLogger} from 'redux-logger'
+
+const thunk = store => next => action => {
+  typeof action === 'function'?
+    // it must be the store.dispatch, cause the next dispatch middleware
+    // in chain
+    action(store.dispatch) :
+    next(action)
+}
 
 const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const middlewares = [promise]
+  const middlewares = [thunk]
 
   if (process.env.NODE_ENV !== 'production')
     middlewares.push(createLogger())
