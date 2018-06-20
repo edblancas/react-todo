@@ -6,7 +6,7 @@ import * as actions from '../actions'
 import TodoList from './TodoList'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {getVisibleTodos} from '../reducers'
+import {getVisibleTodos, getIsFetching} from '../reducers'
 import React from 'react'
 
 const mapStateToProps = (state, {match}) => {
@@ -14,6 +14,7 @@ const mapStateToProps = (state, {match}) => {
   return {
     todos: getVisibleTodos(state, filter),
     filter,
+    isFetching: getIsFetching(state, filter)
   }
 }
 
@@ -32,14 +33,16 @@ class VisibleTodoList extends React.Component {
     // It's important that I destructure the filter right away,
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
-    const {filter, fetchTodos} = this.props
+    const {filter, fetchTodos, requestTodos} = this.props
+    requestTodos(filter)
     fetchTodos(filter)
   }
 
   render() {
-    const {toggleTodo, ...rest} = this.props
-    // return <TodoList {...this.props}/>
-    return <TodoList {...rest} onTodoClick={toggleTodo}/>
+    const {toggleTodo, isFetching, todos} = this.props
+    if (isFetching && !todos.length)
+      return <p>Loading...</p>
+    return <TodoList todos={todos} onTodoClick={toggleTodo}/>
   }
 }
 
