@@ -46,10 +46,9 @@ export const addTodo = (text) =>
     return todo
   })
 
-export const toggleTodo = (id) => {
+export const toggleTodo = (id) =>
   delay(500).then(() => {
     const todo = fakeDatabase.todos.find(todo => todo.id === id)
     todo.completed = !todo.completed
     return todo
   })
-}
