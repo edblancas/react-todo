@@ -34,7 +34,7 @@ class VisibleTodoList extends React.Component {
     // It's important that I destructure the filter right away,
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
-    const {filter, fetchTodos, errorMessage} = this.props
+    const {filter, fetchTodos} = this.props
     fetchTodos(filter).then(() => console.log('done!'))
   }
 
@@ -42,7 +42,6 @@ class VisibleTodoList extends React.Component {
     const {toggleTodo, isFetching, todos, errorMessage} = this.props
     if (isFetching && !todos.length)
       return <p>Loading...</p>
-    console.log(errorMessage, todos.length)
     if (errorMessage && !todos.length)
       // note: se debe passar un arrow fn para que se haga el bind automatico de this
       return <FetchError errorMessage={errorMessage} onRetry={() => this.fetchData()} />
