@@ -8,4 +8,4 @@ The first 30 steps corresponds to the tutorial [Getting Started with Redux](http
 
 The next 27 steps corresponds to the other excelent tutorial [Building React Applications with Idiomatic Redux](https://egghead.io/courses/building-react-applications-with-idiomatic-redux)
 
-
+It also adds an example of using `redux-saga`.
