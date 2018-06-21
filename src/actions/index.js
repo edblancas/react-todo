@@ -23,14 +23,23 @@ export function* addTodoSaga(action) {
 }
 
 // Thunks
-export const toggleTodo = id => dispatch =>
-  api.toggleTodo(id).then(response =>
-    dispatch({
+
+// Thunk with asynx, await
+// When an async function returns, it returns as a resolved promise.
+// When it trows an Error, it returns as a rejected promise.
+// We put the async in the dispatch currying function cause it what uses the
+// redux-thunk middleware, a function that returns a function (with the firm of
+// the store.dispatch), and this former function return a promise that resolves
+// to a dispatched action. Thats how it works the redux-thunk middleware
+export const toggleTodo = id => async dispatch => {
+  const response = await api.toggleTodo(id)
+  return dispatch({
       type: 'TOGGLE_TODO_SUCCESS',
       response: normalize(response, schema.todo)
-    }),
-  )
+    })
+}
 
+// Thunk without async, await
 export const fetchTodos = filter => (dispatch, getState) => {
   if (getIsFetching(getState(), filter)) return Promise.resolve()
 
