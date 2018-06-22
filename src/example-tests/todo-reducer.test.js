@@ -26,7 +26,7 @@ const todo = (state, action) => {
         completed: false,
       }
     case 'TOGGLE_TODO':
-      if (action.id === state.id) return {...state, completed: !state.completed}
+      if (action.id === state.id) return { ...state, completed: !state.completed }
       return state
     default:
       return state
@@ -46,7 +46,7 @@ const todos = (state = [], action) => {
 
 test('test add todo action', () => {
   const stateBefore = []
-  const action = {type: 'ADD_TODO', id: 0, text: 'Learning Redux!'}
+  const action = { type: 'ADD_TODO', id: 0, text: 'Learning Redux!' }
   const stateAfter = [
     {
       id: 0,
@@ -74,7 +74,7 @@ test('toggle todo action reducer', () => {
       completed: false,
     },
   ]
-  const action = {type: 'TOGGLE_TODO', id: 0}
+  const action = { type: 'TOGGLE_TODO', id: 0 }
   const stateAfter = [
     {
       id: 0,
@@ -95,11 +95,12 @@ test('toggle todo action reducer', () => {
 })
 
 test('get initial state app', () => {
-  expect(todoApp(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
-    .toEqual({
-      todos: [],
-      visibilityFilter: 'SHOW_ALL'
-    })
+  expect(
+    todoApp(undefined, { type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL' }),
+  ).toEqual({
+    todos: [],
+    visibilityFilter: 'SHOW_ALL',
+  })
 })
 
 // By convention, the state keys should be named after the reducers that manage them.
@@ -107,15 +108,19 @@ test('get initial state app', () => {
 // like this:
 const todoAppCombineReducer = combineReducers({
   todos,
-  visibilityFilter
+  visibilityFilter,
 })
 
 test('get initial state app, with combineReducers Redux', () => {
-  expect(todoAppCombineReducer(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
-    .toEqual({
-      todos: [],
-      visibilityFilter: 'SHOW_ALL'
-    })
+  expect(
+    todoAppCombineReducer(undefined, {
+      type: 'SET_VISIBILITY_FILTER',
+      visibilityFilter: 'SHOW_ALL',
+    }),
+  ).toEqual({
+    todos: [],
+    visibilityFilter: 'SHOW_ALL',
+  })
 })
 
 const combineReducerImp = reducers => {
@@ -130,9 +135,13 @@ const combineReducerImp = reducers => {
 const todoAppCombineReducerImp = combineReducerImp({ todos, visibilityFilter })
 
 test('get initial state app with our implementation of combine reducers', () => {
-  expect(todoAppCombineReducerImp(undefined, {type: 'SET_VISIBILITY_FILTER', visibilityFilter: 'SHOW_ALL'}))
-    .toEqual({
-      todos: [],
-      visibilityFilter: 'SHOW_ALL'
-    })
+  expect(
+    todoAppCombineReducerImp(undefined, {
+      type: 'SET_VISIBILITY_FILTER',
+      visibilityFilter: 'SHOW_ALL',
+    }),
+  ).toEqual({
+    todos: [],
+    visibilityFilter: 'SHOW_ALL',
+  })
 })

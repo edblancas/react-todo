@@ -9,13 +9,13 @@ test('test mutated object', () => {
   const todoBefore = {
     id: 0,
     text: 'Learn Redux!',
-    completed: true
+    completed: true,
   }
 
   const todoAfter = {
     id: 0,
     text: 'Learn Redux!',
-    completed: false
+    completed: false,
   }
 
   deepFreeze(todoBefore)
@@ -26,21 +26,21 @@ test('test mutated object', () => {
 const toggleTodo = todo => {
   return {
     ...todo,
-    completed: !todo.completed
+    completed: !todo.completed,
   }
 }
 
 test('test new todo object return', () => {
-   const todoBefore = {
+  const todoBefore = {
     id: 0,
     text: 'Learn Redux!',
-    completed: true
+    completed: true,
   }
 
   const todoAfter = {
     id: 0,
     text: 'Learn Redux!',
-    completed: false
+    completed: false,
   }
 
   deepFreeze(todoBefore)

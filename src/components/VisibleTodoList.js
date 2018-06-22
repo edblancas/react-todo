@@ -15,7 +15,7 @@ const mapStateToProps = (state, {match}) => {
     todos: getVisibleTodos(state, filter),
     filter,
     isFetching: getIsFetching(state, filter),
-    errorMessage: getErrorMessage(state, filter)
+    errorMessage: getErrorMessage(state, filter),
   }
 }
 
@@ -24,9 +24,8 @@ class VisibleTodoList extends React.Component {
     this.fetchData()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.filter !== this.props.filter)
-      this.fetchData()
+  componentDidUpdate(prevProps) {
+    if (prevProps.filter !== this.props.filter) this.fetchData()
   }
 
   fetchData() {
@@ -40,12 +39,16 @@ class VisibleTodoList extends React.Component {
 
   render() {
     const {toggleTodo, isFetching, todos, errorMessage} = this.props
-    if (isFetching && !todos.length)
-      return <p>Loading...</p>
+    if (isFetching && !todos.length) return <p>Loading...</p>
     if (errorMessage && !todos.length)
       // note: se debe passar un arrow fn para que se haga el bind automatico de this
-      return <FetchError errorMessage={errorMessage} onRetry={() => this.fetchData()} />
-    return <TodoList todos={todos} onTodoClick={toggleTodo}/>
+      return (
+        <FetchError
+          errorMessage={errorMessage}
+          onRetry={() => this.fetchData()}
+        />
+      )
+    return <TodoList todos={todos} onTodoClick={toggleTodo} />
   }
 }
 
@@ -54,11 +57,10 @@ class VisibleTodoList extends React.Component {
 // Rather than pass a function, we can pass an object mapping of the names of
 // the callback props that we want to inject and the action creator functions
 // that create the corresponding actions.
-VisibleTodoList = withRouter(
+// Insted of reasign the variable, jus export it
+export default withRouter(
   connect(
     mapStateToProps,
-    actions
+    actions,
   )(VisibleTodoList),
 )
-
-export default VisibleTodoList

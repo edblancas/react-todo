@@ -1,29 +1,24 @@
 import {combineReducers} from 'redux'
 
-const createList = (filter) => {
+const createList = filter => {
   const handleToggle = (state, action) => {
     const {result: toggleId, entities} = action.response
     const {completed} = entities.todos[toggleId]
-    const shouldRemove = (
+    const shouldRemove =
       (completed && filter === 'active') ||
       (!completed && filter === 'completed')
-    )
-    return shouldRemove ?
-      state.filter(id => id !== toggleId) :
-      state
+    return shouldRemove ? state.filter(id => id !== toggleId) : state
   }
 
   const ids = (state = [], action) => {
     switch (action.type) {
       case 'FETCH_TODOS_SUCCESS':
-        return action.filter === filter ?
-          action.response.result :
-          state
+        return action.filter === filter ? action.response.result : state
       case 'ADD_TODO_SUCCESS':
         // faltaba cambiar el if
-        return filter !== 'completed' ?
-          [...state, action.response.result] :
-          state
+        return filter !== 'completed'
+          ? [...state, action.response.result]
+          : state
       case 'TOGGLE_TODO_SUCCESS':
         return handleToggle(state, action)
       default:
@@ -55,7 +50,7 @@ const createList = (filter) => {
       // note: faltaban estos dos casos, para que no muestre el error.
       case 'FETCH_TODOS_REQUEST':
       case 'FETCH_TODOS_SUCCESS':
-        return null;
+        return null
       default:
         return state
     }
@@ -66,8 +61,8 @@ const createList = (filter) => {
 
 export default createList
 
-export const getIds = (state) => state.ids
+export const getIds = state => state.ids
 
-export const getIsFetching = (state) => state.isFetching
+export const getIsFetching = state => state.isFetching
 
-export const getErrorMessage = (state) => state.errorMessage
+export const getErrorMessage = state => state.errorMessage

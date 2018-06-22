@@ -2,12 +2,12 @@ import * as api from '../api'
 import {getIsFetching} from '../reducers'
 import {normalize} from 'normalizr'
 import * as schema from './schema'
-import { call, put } from 'redux-saga/effects'
+import {call, put} from 'redux-saga/effects'
 
 // Sagas
 export const addTodo = text => ({
   type: 'ADD_TODO_REQUEST',
-  text
+  text,
 })
 
 export function* addTodoSaga(action) {
@@ -16,7 +16,8 @@ export function* addTodoSaga(action) {
 
     yield put({
       type: 'ADD_TODO_SUCCESS',
-      response: normalize(response, schema.todo)})
+      response: normalize(response, schema.todo),
+    })
   } catch (e) {
     console.log('Error in the saga')
   }
@@ -34,9 +35,9 @@ export function* addTodoSaga(action) {
 export const toggleTodo = id => async dispatch => {
   const response = await api.toggleTodo(id)
   return dispatch({
-      type: 'TOGGLE_TODO_SUCCESS',
-      response: normalize(response, schema.todo)
-    })
+    type: 'TOGGLE_TODO_SUCCESS',
+    response: normalize(response, schema.todo),
+  })
 }
 
 // Thunk without async, await
@@ -51,10 +52,10 @@ export const fetchTodos = filter => (dispatch, getState) => {
   return api.fetchTodos(filter).then(
     response =>
       dispatch({
-          type: 'FETCH_TODOS_SUCCESS',
-          response: normalize(response, schema.arrayOfTodos),
-          filter,
-        }),
+        type: 'FETCH_TODOS_SUCCESS',
+        response: normalize(response, schema.arrayOfTodos),
+        filter,
+      }),
     error =>
       dispatch({
         type: 'FETCH_TODOS_FAILURE',
