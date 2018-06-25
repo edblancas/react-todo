@@ -1,68 +1,68 @@
-import {combineReducers} from 'redux'
+import {combineReducers} from 'redux';
 
 const createList = filter => {
   const handleToggle = (state, action) => {
-    const {result: toggleId, entities} = action.response
-    const {completed} = entities.todos[toggleId]
+    const {result: toggleId, entities} = action.response;
+    const {completed} = entities.todos[toggleId];
     const shouldRemove =
       (completed && filter === 'active') ||
-      (!completed && filter === 'completed')
-    return shouldRemove ? state.filter(id => id !== toggleId) : state
-  }
+      (!completed && filter === 'completed');
+    return shouldRemove ? state.filter(id => id !== toggleId) : state;
+  };
 
   const ids = (state = [], action) => {
     switch (action.type) {
       case 'FETCH_TODOS_SUCCESS':
-        return action.filter === filter ? action.response.result : state
+        return action.filter === filter ? action.response.result : state;
       case 'ADD_TODO_SUCCESS':
         // faltaba cambiar el if
         return filter !== 'completed'
           ? [...state, action.response.result]
-          : state
+          : state;
       case 'TOGGLE_TODO_SUCCESS':
-        return handleToggle(state, action)
+        return handleToggle(state, action);
       default:
-        return state
+        return state;
     }
-  }
+  };
 
   const isFetching = (state = false, action) => {
     // note: faltaba!!
-    if (action.filter !== filter) return state
+    if (action.filter !== filter) return state;
 
     switch (action.type) {
       case 'FETCH_TODOS_REQUEST':
-        return true
+        return true;
       case 'FETCH_TODOS_SUCCESS':
       case 'FETCH_TODOS_FAILURE':
-        return false
+        return false;
       default:
-        return state
+        return state;
     }
-  }
+  };
 
   const errorMessage = (state = null, action) => {
-    if (action.filter !== filter) return state
+    if (action.filter !== filter) return state;
 
     switch (action.type) {
       case 'FETCH_TODOS_FAILURE':
-        return action.message
+        return action.message;
       // note: faltaban estos dos casos, para que no muestre el error.
       case 'FETCH_TODOS_REQUEST':
       case 'FETCH_TODOS_SUCCESS':
-        return null
+        return null;
       default:
-        return state
+        return state;
     }
-  }
+  };
 
-  return combineReducers({ids, isFetching, errorMessage})
-}
+  return combineReducers({ids, isFetching, errorMessage});
+};
 
-export default createList
+export default createList;
 
-export const getIds = state => state.ids
+export const getIds = state => state.ids;
 
-export const getIsFetching = state => state.isFetching
+export const getIsFetching = state => state.isFetching;
 
-export const getErrorMessage = state => state.errorMessage
+export const getErrorMessage = state => state.errorMessage;

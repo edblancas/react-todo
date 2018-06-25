@@ -1,5 +1,5 @@
-import React from 'react'
-import FilterLink from './FilterLink'
+import React from 'react';
+import FilterLink from './FilterLink';
 
 const Filters = () => (
   <p>
@@ -7,6 +7,6 @@ const Filters = () => (
     <FilterLink filter="completed">Completed</FilterLink>{' '}
     <FilterLink filter="active">Active</FilterLink>
   </p>
-)
+);
 
-export default Filters
+export default Filters;

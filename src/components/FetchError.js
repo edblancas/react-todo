@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
 // a functional statless component, faltaban los {} en los args
 const FetchError = ({errorMessage, onRetry}) =>
   <div>
     <span>{errorMessage}</span>
     <button onClick={onRetry}>Retry</button>
-  </div>
+  </div>;
 
-export default FetchError
+export default FetchError;

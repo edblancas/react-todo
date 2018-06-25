@@ -4,14 +4,14 @@ const byId = (state = {}, action) => {
     return {
       ...state,
       ...action.response.entities.todos,
-    }
+    };
   }
 
-  return state
-}
+  return state;
+};
 
-export default byId
+export default byId;
 
 // always the state corresponds to the state of the reducer we are in,
 // in this case is the lookup table
-export const getTodo = (state, id) => state[id]
+export const getTodo = (state, id) => state[id];

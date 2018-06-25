@@ -1,7 +1,7 @@
 import React from 'react';
-import AddTodo from './AddTodo'
-import Filters from './Filters'
-import VisibleTodoList from './VisibleTodoList'
+import AddTodo from './AddTodo';
+import Filters from './Filters';
+import VisibleTodoList from './VisibleTodoList';
 
 const App = () => (
   <div>
@@ -9,6 +9,6 @@ const App = () => (
     <Filters />
     <VisibleTodoList />
   </div>
-)
+);
 
 export default App;

@@ -1,5 +1,5 @@
-import {NavLink} from 'react-router-dom'
-import React from 'react'
+import {NavLink} from 'react-router-dom';
+import React from 'react';
 
 const FilterLink = ({filter, children}) => (
   <NavLink
@@ -9,6 +9,6 @@ const FilterLink = ({filter, children}) => (
   >
     {children}
   </NavLink>
-)
+);
 
-export default FilterLink
+export default FilterLink;

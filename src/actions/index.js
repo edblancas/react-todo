@@ -1,25 +1,25 @@
-import * as api from '../api'
-import {getIsFetching} from '../reducers'
-import {normalize} from 'normalizr'
-import * as schema from './schema'
-import {call, put} from 'redux-saga/effects'
+import * as api from '../api';
+import {getIsFetching} from '../reducers';
+import {normalize} from 'normalizr';
+import * as schema from './schema';
+import {call, put} from 'redux-saga/effects';
 
 // Sagas
 export const addTodo = text => ({
   type: 'ADD_TODO_REQUEST',
   text,
-})
+});
 
 export function* addTodoSaga(action) {
   try {
-    const response = yield call(api.addTodo, action.text)
+    const response = yield call(api.addTodo, action.text);
 
     yield put({
       type: 'ADD_TODO_SUCCESS',
       response: normalize(response, schema.todo),
-    })
+    });
   } catch (e) {
-    console.log('Error in the saga')
+    console.log('Error in the saga');
   }
 }
 
@@ -33,21 +33,21 @@ export function* addTodoSaga(action) {
 // the store.dispatch), and this former function return a promise that resolves
 // to a dispatched action. Thats how it works the redux-thunk middleware
 export const toggleTodo = id => async dispatch => {
-  const response = await api.toggleTodo(id)
+  const response = await api.toggleTodo(id);
   return dispatch({
     type: 'TOGGLE_TODO_SUCCESS',
     response: normalize(response, schema.todo),
-  })
-}
+  });
+};
 
 // Thunk without async, await
 export const fetchTodos = filter => (dispatch, getState) => {
-  if (getIsFetching(getState(), filter)) return Promise.resolve()
+  if (getIsFetching(getState(), filter)) return Promise.resolve();
 
   dispatch({
     type: 'FETCH_TODOS_REQUEST',
     filter,
-  })
+  });
 
   return api.fetchTodos(filter).then(
     response =>
@@ -62,5 +62,5 @@ export const fetchTodos = filter => (dispatch, getState) => {
         filter,
         message: error.message || 'Something went wrong.',
       }),
-  )
-}
+  );
+};
