@@ -20,4 +20,8 @@ For ESLint:
 The only error left is:
 ` error  'process' is not defined  no-undef`
 
+Adds a file with the action types as `const` for prevent errors and as best practice.
+
+Adds test for the worker saga `addTodoSaga`.
+
 See: <https://eslint.org/docs/rules/no-process-env>
