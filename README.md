@@ -1,3 +1,5 @@
+# REACT TODO APP
+
 This project was created with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 It was separated by steps (view the `git log`), with some extra steps for dividing the single `js` react app into files and folders, also updated the dependencies and the changes in the code that implies.
@@ -25,3 +27,6 @@ Adds a file with the action types as `const` for prevent errors and as best prac
 Adds test for the worker saga `addTodoSaga`.
 
 See: <https://eslint.org/docs/rules/no-process-env>
+
+## TODO
+- [Add snapshot testing]( http://jestjs.io/docs/en/snapshot-testing.html)
