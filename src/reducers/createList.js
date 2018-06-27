@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import * as TYPES from '../actions/types';
 
 const createList = filter => {
   const handleToggle = (state, action) => {
@@ -12,14 +13,14 @@ const createList = filter => {
 
   const ids = (state = [], action) => {
     switch (action.type) {
-      case 'FETCH_TODOS_SUCCESS':
+      case TYPES.FETCH_TODOS_SUCCESS:
         return action.filter === filter ? action.response.result : state;
       case 'ADD_TODO_SUCCESS':
         // faltaba cambiar el if
         return filter !== 'completed'
           ? [...state, action.response.result]
           : state;
-      case 'TOGGLE_TODO_SUCCESS':
+      case TYPES.TOGGLE_TODO_SUCCESS:
         return handleToggle(state, action);
       default:
         return state;
@@ -31,10 +32,10 @@ const createList = filter => {
     if (action.filter !== filter) return state;
 
     switch (action.type) {
-      case 'FETCH_TODOS_REQUEST':
+      case TYPES.FETCH_TODOS_REQUEST:
         return true;
-      case 'FETCH_TODOS_SUCCESS':
-      case 'FETCH_TODOS_FAILURE':
+      case TYPES.FETCH_TODOS_SUCCESS:
+      case TYPES.FETCH_TODOS_FAILURE:
         return false;
       default:
         return state;
@@ -45,11 +46,11 @@ const createList = filter => {
     if (action.filter !== filter) return state;
 
     switch (action.type) {
-      case 'FETCH_TODOS_FAILURE':
+      case TYPES.FETCH_TODOS_FAILURE:
         return action.message;
       // note: faltaban estos dos casos, para que no muestre el error.
-      case 'FETCH_TODOS_REQUEST':
-      case 'FETCH_TODOS_SUCCESS':
+      case TYPES.FETCH_TODOS_REQUEST:
+      case TYPES.FETCH_TODOS_SUCCESS:
         return null;
       default:
         return state;
