@@ -1,9 +1,9 @@
-import { addTodoSaga } from '.';
 import { call, put } from 'redux-saga/effects';
-import * as api from '../api';
 import v4 from 'node-uuid';
+import { normalize } from 'normalizr';
+import { addTodoSaga } from '.';
+import * as api from '../api';
 import * as TYPES from './types';
-import {normalize} from 'normalizr';
 import * as schema from './schema';
 
 describe('addTodoSaga', () => {
@@ -32,6 +32,7 @@ describe('addTodoSaga', () => {
     expect(addTodoSagaGen.next(response).value)
       .toEqual(put({
         type: TYPES.ADD_TODO_SUCCESS,
-        response: normalize(response, schema.todo)}));
+        response: normalize(response, schema.todo),
+      }));
   });
 });

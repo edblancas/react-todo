@@ -10,6 +10,6 @@ sagaMiddleware.run(mySaga);
 
 ReactDOM.render(
   <Root store={store} />,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 registerServiceWorker();

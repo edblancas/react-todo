@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import byId, * as fromById from './byId';
 import createList, * as fromCreateList from './createList';
 
@@ -8,7 +8,7 @@ const listByFilter = combineReducers({
   completed: createList('completed'),
 });
 
-const todos = combineReducers({byId, idsByFilter: listByFilter});
+const todos = combineReducers({ byId, idsByFilter: listByFilter });
 
 export default todos;
 
@@ -22,8 +22,10 @@ export const getVisibleTodos = (state, filter) => {
 };
 
 // note: faltaba
-export const getIsFetching = (state, filter) =>
+export const getIsFetching = (state, filter) => {
   fromCreateList.getIsFetching(state.idsByFilter[filter]);
+};
 
-export const getErrorMessage = (state, filter) =>
+export const getErrorMessage = (state, filter) => {
   fromCreateList.getErrorMessage(state.idsByFilter[filter]);
+};

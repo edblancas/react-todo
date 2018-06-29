@@ -1,13 +1,6 @@
 import deepFreeze from 'deep-freeze';
 import { combineReducers } from 'redux';
 
-const todoApp = (state = {}, action) => {
-  return {
-    todos: todos(state.todos, action),
-    visibilityFilter: visibilityFilter(state.visibilityFilter, action),
-  };
-};
-
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
@@ -43,6 +36,11 @@ const todos = (state = [], action) => {
       return state;
   }
 };
+
+const todoApp = (state = {}, action) => ({
+  todos: todos(state.todos, action),
+  visibilityFilter: visibilityFilter(state.visibilityFilter, action),
+});
 
 test('test add todo action', () => {
   const stateBefore = [];
@@ -123,14 +121,12 @@ test('get initial state app, with combineReducers Redux', () => {
   });
 });
 
-const combineReducerImp = reducers => {
-  return (state = {}, action) => {
-    return Object.keys(reducers).reduce((nextState, key) => {
-      nextState[key] = reducers[key](state[key], action);
-      return nextState;
-    }, {});
-  };
-};
+// eslint-disable-next-line max-len
+const combineReducerImp = reducers => (state = {}, action) => Object.keys(reducers).reduce((nextState, key) => {
+  // eslint-disable-next-line no-param-reassign
+  nextState[key] = reducers[key](state[key], action);
+  return nextState;
+}, {});
 
 const todoAppCombineReducerImp = combineReducerImp({ todos, visibilityFilter });
 

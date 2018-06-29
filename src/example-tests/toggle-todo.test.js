@@ -1,6 +1,7 @@
 import deepFreeze from 'deep-freeze';
 
-const toggleTodoMutated = todo => {
+const toggleTodoMutated = (todo) => {
+  // eslint-disable-next-line no-param-reassign
   todo.completed = !todo.completed;
   return todo;
 };
@@ -23,12 +24,10 @@ test('test mutated object', () => {
   expect(toggleTodoMutated(todoBefore)).toEqual(todoAfter);
 });
 
-const toggleTodo = todo => {
-  return {
-    ...todo,
-    completed: !todo.completed,
-  };
-};
+const toggleTodo = todo => ({
+  ...todo,
+  completed: !todo.completed,
+});
 
 test('test new todo object return', () => {
   const todoBefore = {

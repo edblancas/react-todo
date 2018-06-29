@@ -1,15 +1,15 @@
 // We can start by replacing named imports with a namespace import.
 // This means that any function exported from the actions file will be in the
 // object called actions, which we will pass as a second argument to connect.
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import React from 'react';
 import * as actions from '../actions';
 import TodoList from './TodoList';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom';
-import {getVisibleTodos, getIsFetching, getErrorMessage} from '../reducers';
-import React from 'react';
+import { getVisibleTodos, getIsFetching, getErrorMessage } from '../reducers';
 import FetchError from './FetchError';
 
-const mapStateToProps = (state, {match}) => {
+const mapStateToProps = (state, { match }) => {
   const filter = match.params.filter || 'all';
   return {
     todos: getVisibleTodos(state, filter),
@@ -25,7 +25,8 @@ class VisibleTodoList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.filter !== this.props.filter) this.fetchData();
+    const { filter } = this.props;
+    if (prevProps.filter !== filter) this.fetchData();
   }
 
   fetchData() {
@@ -33,21 +34,30 @@ class VisibleTodoList extends React.Component {
     // It's important that I destructure the filter right away,
     // because by the time the callback fires, this.props.filter might have
     // changed because the user might have navigated away.
-    const {filter, fetchTodos} = this.props;
+    const { filter, fetchTodos } = this.props;
     fetchTodos(filter).then(() => console.log('done!'));
   }
 
   render() {
-    const {toggleTodo, isFetching, todos, errorMessage} = this.props;
-    if (isFetching && !todos.length) return <p>Loading...</p>;
-    if (errorMessage && !todos.length)
-      // note: se debe passar un arrow fn para que se haga el bind automatico de this
+    const {
+      toggleTodo, isFetching, todos, errorMessage,
+    } = this.props;
+    if (isFetching && !todos.length) {
+      return (
+        <p>
+Loading...
+        </p>
+      );
+    }
+    if (errorMessage && !todos.length) {
+    // note: se debe passar un arrow fn para que se haga el bind automatico de this
       return (
         <FetchError
           errorMessage={errorMessage}
           onRetry={() => this.fetchData()}
         />
       );
+    }
     return <TodoList todos={todos} onTodoClick={toggleTodo} />;
   }
 }

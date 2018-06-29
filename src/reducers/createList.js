@@ -1,13 +1,12 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import * as TYPES from '../actions/types';
 
-const createList = filter => {
+const createList = (filter) => {
   const handleToggle = (state, action) => {
-    const {result: toggleId, entities} = action.response;
-    const {completed} = entities.todos[toggleId];
-    const shouldRemove =
-      (completed && filter === 'active') ||
-      (!completed && filter === 'completed');
+    const { result: toggleId, entities } = action.response;
+    const { completed } = entities.todos[toggleId];
+    const shouldRemove = (completed && filter === 'active')
+      || (!completed && filter === 'completed');
     return shouldRemove ? state.filter(id => id !== toggleId) : state;
   };
 
@@ -57,7 +56,7 @@ const createList = filter => {
     }
   };
 
-  return combineReducers({ids, isFetching, errorMessage});
+  return combineReducers({ ids, isFetching, errorMessage });
 };
 
 export default createList;
