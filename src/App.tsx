@@ -22,7 +22,7 @@ function App() {
       {todos.length === 0 && "no todos"}
       <ol>
         {todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
+          <TodoItem key={todo.id} {...todo} />
         ))}
       </ol>
     </TodosContext.Provider>
