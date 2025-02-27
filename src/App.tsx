@@ -2,6 +2,7 @@ import { createContext, Dispatch, SetStateAction, useState } from 'react';
 import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
 import { type Todo } from '../lib/types';
+import TodoList from './components/TodoList';
 
 type TodosContextProps = {
   setTodos: Dispatch<SetStateAction<Todo[]>>;
@@ -19,12 +20,7 @@ function App() {
   return (
     <TodosContext.Provider value={contextValue}>
       <TodoForm />
-      {todos.length === 0 && "no todos"}
-      <ol>
-        {todos.map((todo) => (
-          <TodoItem key={todo.id} {...todo} />
-        ))}
-      </ol>
+      <TodoList />
     </TodosContext.Provider>
   );
 }
