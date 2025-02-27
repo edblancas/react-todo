@@ -1,14 +1,9 @@
 import { useState } from 'react'
 import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
+import { type Todo } from '../lib/types';
 
 function App() {
-  type Todo = {
-    title: string;
-    completed: boolean;
-    id: string;
-  }
-
   const [todos, setTodos] = useState<Todo[]>([])
 
   return (

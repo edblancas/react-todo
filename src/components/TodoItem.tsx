@@ -1,4 +1,4 @@
-export default function TodoItem({ todo }) {
+export default function TodoItem({ todo }: { todo: Todo }) {
   const handleCheckTodo = (id: string, completed: boolean) => {
     // setTodos((currTodos) => {
     //   return currTodos.map((v) => {
