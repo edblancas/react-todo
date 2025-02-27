@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTodoService } from "../context/TodoServiceContext";
 import { Todo } from '../../lib/types';
 
-export default function TodoForm() {
+export default function TodoForm({ setTodos }: { setTodos: React.Dispatch<React.SetStateAction<Todo[]>> }) {
   const todoService = useTodoService();
   const [newItem, setNewItem] = useState('');
 
@@ -14,6 +14,9 @@ export default function TodoForm() {
     try {
       // Call the service to add the todo. This works with either localStorage or API based on your implementation.
       await todoService.addTodo(newTodo);
+      setTodos((currTodos) => {
+        return [...currTodos, newTodo]
+      })
     } catch (error) {
       console.error('Failed to add todo:', error);
       // Optionally add UI error handling here.
