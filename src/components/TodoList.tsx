@@ -1,23 +1,36 @@
-import { useContext } from "react";
-import { TodosContext } from "../App";
+import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
+import { Todo } from "../../lib/types";
+import { useTodoService } from "../context/TodoServiceContext";
 
 export default function TodoList() {
-  const todosContext = useContext(TodosContext)
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const todoService = useTodoService();
 
-  // check so TS dont throw an error that the todosContext could be undefined
-  if (!todosContext) {
-    throw new Error(
-      'TodosContext is undefined. Make sure you are wrapping your component tree with TodosContext.Provider.'
-    );
-  }
+  useEffect(() => {
+    // todoService.getAllTodos().then(setTodos);
+    // Define an async function inside the effect
+    const fetchTodos = async () => {
+      try {
+        const todosData = await todoService.getAllTodos();
+        setTodos(todosData);
+      } catch (error) {
+        // handle errors here if needed
+        console.error('Failed to fetch todos:', error);
+      }
+    };
+
+    // Call the async function
+    fetchTodos();
+
+  }, [todoService]);
 
   return (
     <>
-      {todosContext.todos.length === 0 && "no todos"}
+      {todos.length === 0 && "no todos"}
       <ol>
         {
-          todosContext.todos.map((todo) => (
+          todos.map((todo) => (
             <TodoItem key={todo.id} {...todo} />
           ))
         }

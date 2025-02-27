@@ -1,39 +1,43 @@
-import { useContext } from "react"
-import { TodosContext } from "../App"
-import { type Todo } from "../../lib/types"
+import { type Todo } from "../../lib/types";
+import { useTodoService } from "../context/TodoServiceContext";
 
 export default function TodoItem({ id, completed, title }: Todo) {
-  const todosContext = useContext(TodosContext)
+  const todoService = useTodoService();
 
-  // check so TS dont throw an error that the todosContext could be undefined
-  if (!todosContext) {
-    throw new Error(
-      'TodosContext is undefined. Make sure you are wrapping your component tree with TodosContext.Provider.'
-    );
-  }
+  // Notice that the event handlers are declared as async functions so you can use await with the service calls:
+  const handleCheckTodo = async (id: string, completed: boolean) => {
+    // Create an updated todo object
+    const updatedTodo = { id, completed, title };
+    try {
+      // Update the todo via the service
+      await todoService.updateTodo(updatedTodo);
+    } catch (error) {
+      console.error("Error updating todo:", error);
+    }
+  };
 
-  const handleCheckTodo = (id: string, completed: boolean) => {
-    todosContext.setTodos((currTodos) => {
-      return currTodos.map((todo) => {
-        if (todo.id == id) {
-          todo.completed = completed
-          return todo
-        }
-        return todo
-      })
-    })
-  }
+  const handleDeleteTodo = async (id: string) => {
+    try {
+      // Delete the todo via the service
+      await todoService.deleteTodo(id);
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
+  };
 
-  const handleDeleteTodo = (id: string) => {
-    todosContext.setTodos((currTodos) => {
-      return currTodos.filter((todo) => todo.id !== id)
-    })
-  }
   return (
     <li key={id}>
-      <input type='checkbox' defaultChecked={completed} onChange={(e) => handleCheckTodo(id, e.target.checked)} />
+      <input
+        type="checkbox"
+        checked={completed}
+        onChange={(e) => handleCheckTodo(id, e.target.checked)}
+      />
       {title}
-      <input type='button' value='Delete' onClick={() => handleDeleteTodo(id)} />
+      <input
+        type="button"
+        value="Delete"
+        onClick={() => handleDeleteTodo(id)}
+      />
     </li>
-  )
+  );
 }
