@@ -23,7 +23,7 @@ export default function TodoList() {
     // Call the async function
     fetchTodos();
 
-  }, [todoService]);
+  }, []);
 
   return (
     <>
