@@ -1,6 +1,5 @@
-import { createContext, Dispatch, SetStateAction, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import TodoForm from './components/TodoForm';
-import TodoItem from './components/TodoItem';
 import { type Todo } from '../lib/types';
 import TodoList from './components/TodoList';
 
@@ -14,8 +13,21 @@ type TodosContextProps = {
 export const TodosContext = createContext<TodosContextProps | undefined>(undefined);
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  //  add a function to set the default value
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const todos = localStorage.getItem('TODOS')
+    if (!todos) {
+      return []
+    }
+    return JSON.parse(todos)
+  });
   const contextValue = { todos, setTodos };
+
+  // will run the code when the component first render (mount)
+  // and whenever todos chages
+  useEffect(() => {
+    localStorage.setItem('TODOS', JSON.stringify(todos))
+  }, [todos])
 
   return (
     <TodosContext.Provider value={contextValue}>
