@@ -7,7 +7,7 @@ export default function TodoList(
   return (
     <>
       {todos.length === 0 && "no todos"}
-      <ol>
+      <ol className="list-group">
         {
           todos.map((todo) => (
             <TodoItem key={todo.id} setTodos={setTodos} {...todo} />

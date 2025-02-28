@@ -40,18 +40,31 @@ export default function TodoItem(
   };
 
   return (
-    <li key={id}>
-      <input
-        type="checkbox"
-        checked={completed}
-        onChange={(e) => handleCheckTodo(id, e.target.checked)}
-      />
-      {title}
-      <input
-        type="button"
-        value="Delete"
-        onClick={() => handleDeleteTodo(id)}
-      />
+    <li key={id} className="list-group-item">
+      <div className="row align-items-center">
+        <div className="col-8">
+          <div className="form-check">
+            <input
+              type="checkbox"
+              checked={completed}
+              onChange={(e) => handleCheckTodo(id, e.target.checked)}
+              className="form-check-input"
+              id={id}
+            />
+            <label className="form-check-label" htmlFor={id}>
+              {title}
+            </label>
+          </div>
+        </div>
+        <div className="col-4 text-right">
+          <input
+            type="button"
+            value="Delete"
+            onClick={() => handleDeleteTodo(id)}
+            className="btn btn-danger"
+          />
+        </div>
+      </div>
     </li>
   );
 }

@@ -32,8 +32,17 @@ function App() {
 
   return (
     <TodoServiceContext.Provider value={todoService}>
-      <TodoForm setTodos={setTodos} />
-      <TodoList todos={todos} setTodos={setTodos} />
+      {/* You can use two separate .rows, but it's not necessary for a simple vertical stacking layout */}
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12 mb-3">
+            <TodoForm setTodos={setTodos} />
+          </div>
+          <div className="col-md-12">
+            <TodoList todos={todos} setTodos={setTodos} />
+          </div>
+        </div>
+      </div>
     </TodoServiceContext.Provider>
   );
 }

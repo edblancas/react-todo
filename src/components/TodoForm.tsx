@@ -28,16 +28,17 @@ export default function TodoForm({ setTodos }: { setTodos: React.Dispatch<React.
 
   return (
     <form>
-      <label htmlFor="newItem">Add todo</label>
-      <br />
-      <input
-        type="text"
-        id="newItem"
-        value={newItem}
-        onChange={(e) => setNewItem(e.target.value)}
-      />
-      <br />
-      <button onClick={handleAddTodo}>Add</button>
+      <div className='form-group'>
+        <label htmlFor="newItem">Add todo</label>
+        <input
+          className='form-control'
+          type="text"
+          id="newItem"
+          value={newItem}
+          onChange={(e) => setNewItem(e.target.value)}
+        />
+      </div>
+      <button onClick={handleAddTodo} className='btn btn-primary'>Add</button>
     </form>
   );
 }
