@@ -1,9 +1,8 @@
 import TodoItem from "./TodoItem";
-import { Todo } from "../../lib/types";
+import { useTodos } from "../App";
 
-export default function TodoList(
-  { todos, setTodos }: { todos: Todo[], setTodos: React.Dispatch<React.SetStateAction<Todo[]>> }
-) {
+export default function TodoList() {
+  const { todos, setTodos } = useTodos()
   return (
     <>
       {todos.length === 0 && "no todos"}

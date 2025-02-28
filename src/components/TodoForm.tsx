@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useTodoService } from "../context/TodoServiceContext";
 import { Todo } from '../../lib/types';
+import { useTodos } from '../App';
 
-export default function TodoForm({ setTodos }: { setTodos: React.Dispatch<React.SetStateAction<Todo[]>> }) {
+export default function TodoForm() {
   const todoService = useTodoService();
   const [newItem, setNewItem] = useState('');
+  const { setTodos } = useTodos()
 
   const handleAddTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
