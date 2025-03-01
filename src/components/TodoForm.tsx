@@ -8,17 +8,26 @@ export default function TodoForm() {
   const [newItem, setNewItem] = useState('');
   const { setTodos } = useTodos()
 
+  // Add todo with optimistic update
   const handleAddTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newItem.trim()) return; // Prevent empty submissions
 
-    const newTodo: Todo = { title: newItem, completed: false, id: crypto.randomUUID() };
+    const newTodo: Todo = {
+      title: newItem,
+      completed: false,
+      id: crypto.randomUUID() // Client-generated ID for optimistic update
+    };
 
+    // 1. Optimistically update UI
+    setTodos((currTodos) => [...currTodos, newTodo]);
     try {
+      // 2. Actually add to backend
       await todoService.addTodo(newTodo);
-      setTodos((currTodos) => [...currTodos, newTodo]);
     } catch (error) {
-      console.error('Failed to add todo:', error);
+      // 3. Rollback on error
+      console.error(`Failed to add todo ${newTodo}, reverting...`);
+      setTodos((currTodos) => currTodos.filter((todo) => todo.id !== newTodo.id))
     }
 
     setNewItem('');
