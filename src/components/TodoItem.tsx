@@ -17,8 +17,10 @@ export default function TodoItem(
       setTodos((currTodos) => {
         return currTodos.map((todo) => {
           if (todo.id === id) {
-            todo.completed = completed
-            return todo
+            // todo.completed = completed
+            // return todo
+            // must return a new obj, so the change in referene obj is picked up by react and re render correctly
+            return { ...todo, completed: completed }
           }
           return todo
         })
