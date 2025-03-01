@@ -6,7 +6,7 @@ import { useTodos } from '../App';
 export default function TodoForm() {
   const todoService = useTodoService();
   const [newItem, setNewItem] = useState('');
-  const { setTodos } = useTodos()
+  const { todos, setTodos } = useTodos()
 
   // Add todo with optimistic update
   const handleAddTodo = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,14 +20,21 @@ export default function TodoForm() {
     };
 
     // 1. Optimistically update UI
-    setTodos((currTodos) => [...currTodos, newTodo]);
+    setTodos((currTodos) => {
+      console.log('updated optimistic todos', [...currTodos, newTodo])
+      return [...currTodos, newTodo]
+    });
     try {
       // 2. Actually add to backend
+      // simulate backend error to rollback
+      throw Error('simulate error in the backend')
       await todoService.addTodo(newTodo);
     } catch (error) {
       // 3. Rollback on error
-      console.error(`Failed to add todo ${newTodo}, reverting...`);
-      setTodos((currTodos) => currTodos.filter((todo) => todo.id !== newTodo.id))
+      // easy rollback, as todos is the value of the last render
+      console.error('Failed to add todo', newTodo);
+      console.log('prev todos', todos)
+      // setTodos(todos)
     }
 
     setNewItem('');
